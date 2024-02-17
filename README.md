@@ -21,16 +21,16 @@ curl -sSL https://install.python-poetry.org | python -
 
 ## Installing the Project
 
-1. Clone the Project: Clone the project from the repository using git. Replace `your-repository-link` with the link to your repository:
+1. Clone the Project: Clone the project from the repository using git:
 
    ```bash
-   git clone your-repository-link
+   git clone https://github.com/nickperkins/manual-downloader.git
    ```
 
 2. Navigate to the Project Directory: Change your current directory to the project's directory:
 
     ```bash
-    cd regs-downloader
+    cd manual-downloader
     ```
 
 3. **Install Dependencies**: Install the project dependencies using Poetry:
