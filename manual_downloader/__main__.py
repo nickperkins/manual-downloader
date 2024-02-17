@@ -105,9 +105,9 @@ def download_pdfs(pdf_list, save_dir):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description='PDF Grabber for Motorsport Australia Manual.')
-    parser.add_argument('url', type=str, help='Base URL of the manual',
+    parser.add_argument('-u', '--url', type=str, help='Base URL of the manual',
                         default="https://www.motorsport.org.au/regulations/manual")
-    parser.add_argument('save_dir', type=str, help='Directory path to save the downloaded PDF files',
+    parser.add_argument('-s', '--save_dir', type=str, help='Directory path to save the downloaded PDF files',
                         default=os.path.join(os.getcwd(), "pdfs"))
     args = parser.parse_args()
 
