@@ -3,6 +3,9 @@ import os
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 import argparse
+import tempfile
+import filecmp
+import logging
 
 
 def download_pdf(url, save_path):
@@ -26,7 +29,7 @@ def download_pdf(url, save_path):
 
     with open(save_path, 'wb') as file:
         file.write(response.content)
-    print(f"PDF downloaded successfully and saved at {save_path}")
+    logging.debug(f"PDF downloaded and saved to {save_path}")
 
 
 def get_child_pages(url):
@@ -95,14 +98,24 @@ def download_pdfs(pdf_list, save_dir):
     Returns:
         None
     """
-    for pdf in pdf_list:
-        filename = urlparse(pdf).path.split("/")[-1]
-        save_path = os.path.join(save_dir, filename)
-        download_pdf(pdf, save_path)
+    with tempfile.TemporaryDirectory() as tmpdir:
+        for pdf in pdf_list:
+            filename = urlparse(pdf).path.split("/")[-1]
+            tmp_save_path = os.path.join(tmpdir, filename)
+            download_pdf(pdf, tmp_save_path)
+            save_path = os.path.join(save_dir, filename)
+            if os.path.exists(save_path):
+                if filecmp.cmp(tmp_save_path, save_path):
+                    logging.info(f"PDF already exists at {save_path}, skipping.")
+                    continue
+            os.rename(tmp_save_path, save_path)
+            logging.info(f"PDF saved to {save_path}")
+
     print("All PDFs downloaded successfully.")
 
 
 if __name__ == "__main__":
+    logger = logging.getLogger(__name__)
     parser = argparse.ArgumentParser(
         description='PDF Grabber for Motorsport Australia Manual.')
     parser.add_argument('-u', '--url', type=str, help='Base URL of the manual',
